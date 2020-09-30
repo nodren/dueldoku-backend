@@ -14,5 +14,5 @@ I wanted to make this relatively simple to run. Apart from starting the server, 
 
 ## How to run
 
-1. `npm install`
-2. `npm start`
+1. `yarn install`
+2. `yarn start`
