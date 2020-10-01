@@ -37,28 +37,3 @@ export function calculateScore(
 	}
 	return bonus + 10
 }
-
-export function processScores(scores: Record<string, number>): [Score, Score] {
-	const ret: any = Object.entries(scores).map(([id, score]) => {
-		return {
-			id,
-			score,
-		}
-	})
-	ret.sort((scoreA: Score, scoreB: Score) => {
-		return scoreB.score - scoreA.score
-	})
-	return ret
-}
-
-export function formatAnswers(answers: Record<string, string>, id: string): Answers {
-	const formattedAnswers: Answers = {}
-	for (const [box, playerId] of Object.entries(answers)) {
-		if (playerId === id) {
-			formattedAnswers[box] = 'you'
-		} else {
-			formattedAnswers[box] = 'opponent'
-		}
-	}
-	return formattedAnswers
-}

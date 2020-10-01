@@ -23,7 +23,7 @@ export class GameGateway {
 	async start(@MessageBody() id: string, @ConnectedSocket() socket: Socket) {
 		await this.redis.set(`scores.${id}`, '{}')
 		socket.join(id, err => {
-			this.server.to(id).emit('joined')
+			socket.to(id).emit('joined', id)
 		})
 	}
 
@@ -33,7 +33,6 @@ export class GameGateway {
 		{ id, mode, board, solution }: { id: string; mode: string; board: Board; solution: Board },
 		@ConnectedSocket() socket: Socket,
 	) {
-		console.log('ready', id, socket.rooms)
 		await this.redis.set(`board.${id}`, JSON.stringify(board))
 		await this.redis.set(`solution.${id}`, JSON.stringify(solution))
 		await this.redis.set(`answers.${id}`, JSON.stringify({}))
@@ -46,7 +45,6 @@ export class GameGateway {
 		{ id, activeBox, number }: { id: string; activeBox: [number, number]; number: number },
 		@ConnectedSocket() socket: Socket,
 	) {
-		console.log('guess', id, socket.rooms)
 		const board = JSON.parse(await this.redis.get(`board.${id}`))
 		const solution = JSON.parse(await this.redis.get(`solution.${id}`))
 		const answers = JSON.parse(await this.redis.get(`answers.${id}`))
@@ -61,7 +59,9 @@ export class GameGateway {
 		answers[`${activeBox[0]}:${activeBox[1]}`] = socket.id
 		scores[socket.id] =
 			(scores[socket.id] || 0) + calculateScore(board, solution, activeBox, number)
+		await this.redis.set(`board.${id}`, JSON.stringify(board))
 		await this.redis.set(`scores.${id}`, JSON.stringify(scores))
+		await this.redis.set(`answers.${id}`, JSON.stringify(answers))
 		this.server.to(id).emit('update', {
 			board,
 			answers,
@@ -93,6 +93,7 @@ export class GameGateway {
 		}
 		board[activeBox[1]][activeBox[0]] = solutionSquare
 		scores[socket.id] = (scores[socket.id] || 0) - 50
+		await this.redis.set(`board.${id}`, JSON.stringify(board))
 		await this.redis.set(`scores.${id}`, JSON.stringify(scores))
 		//TODO: score logic goes here
 		this.server.to(id).emit('update', {
@@ -125,6 +126,7 @@ export class GameGateway {
 		}
 		board[activeBox[1]][activeBox[0]] = 0
 
+		await this.redis.set(`board.${id}`, JSON.stringify(board))
 		this.server.to(id).emit('update', {
 			board,
 			answers,

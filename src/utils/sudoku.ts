@@ -1,5 +1,3 @@
-import { isEqual } from 'lodash'
-
 import { Board } from '../types'
 
 export function convertStringToBoard(boardStr: string): Board {
@@ -25,11 +23,6 @@ export function convertBoardToString(board: Board) {
 		boardRows.push(row.join(''))
 	}
 	return boardRows.join('')
-}
-
-export function countNumberOnBoard(board: Board, number: number) {
-	const boardStr = convertBoardToString(board)
-	return boardStr.split(number.toString()).length - 1
 }
 
 export function getBoxCoords(row: number, column: number): [number, number] {

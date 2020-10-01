@@ -4,10 +4,10 @@ import { SudokuGenerator } from '../utils/generator'
 
 //this definitely needs tweaking
 const MODES = {
-	easy: 1,
-	medium: 3,
-	hard: 5,
-	expert: 10,
+	easy: 2,
+	medium: 4,
+	hard: 7,
+	expert: 12,
 }
 
 @Injectable()

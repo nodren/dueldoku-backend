@@ -31,7 +31,7 @@ export class SudokuGenerator {
 		this.solution = cloneDeep(this.board)
 		// this.printBoard('full solution')
 		this.removeNumbersFromBoard(difficulty)
-		this.printBoard('with removed numbers')
+		// this.printBoard('with removed numbers')
 		return [this.board, this.solution]
 	}
 
