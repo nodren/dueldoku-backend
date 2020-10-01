@@ -8,7 +8,7 @@ import {
 import { Server, Socket } from 'socket.io'
 
 import { RedisService } from '../RedisService'
-import { Board } from '../../../sudoku/src/types'
+import { Board } from '../types'
 import { convertBoardToString } from '../utils/sudoku'
 import { calculateScore } from '../utils/utils'
 
