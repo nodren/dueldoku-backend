@@ -4,17 +4,19 @@ import { SudokuGenerator } from '../utils/generator'
 
 //this definitely needs tweaking
 const MODES = {
-	easy: 2,
-	medium: 4,
-	hard: 7,
-	expert: 12,
+	one: [80, 0],
+	cheat: [75, 0],
+	easy: [40, 3],
+	medium: [35, 3],
+	hard: [27, 5],
+	expert: [17, 8],
 }
 
 @Injectable()
 export class BoardService {
 	generate(mode: keyof typeof MODES) {
 		const generator = new SudokuGenerator()
-		const [board, solution] = generator.generatePuzzle(MODES[mode])
+		const [board, solution] = generator.generatePuzzle(MODES[mode][0], MODES[mode][1])
 		return {
 			board,
 			solution,

@@ -1,5 +1,5 @@
-import { convertBoardToString } from './sudoku'
-import { Answers, Board, Score } from '../types'
+import { Board } from '../types'
+import { convertBoardToString, isBoxFull } from './sudoku'
 
 export function calculateScore(
 	board: Board,
@@ -29,7 +29,10 @@ export function calculateScore(
 	if (!zeroColumn) {
 		bonus += 50
 	}
-	//TODO: check the box
+	//check the box
+	if (isBoxFull(board, activeBox[1], activeBox[0])) {
+		bonus += 50
+	}
 	//check the number set
 	const boardStr = convertBoardToString(board)
 	if (boardStr.match(new RegExp(guess.toString(), 'g')).length === 9) {

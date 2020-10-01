@@ -66,6 +66,8 @@ export class GameGateway {
 			board,
 			answers,
 			scores,
+			activeBox,
+			number,
 		})
 
 		if (convertBoardToString(board) === convertBoardToString(solution)) {
@@ -100,6 +102,8 @@ export class GameGateway {
 			board,
 			answers,
 			scores,
+			activeBox,
+			number: solutionSquare,
 		})
 
 		if (convertBoardToString(board) === convertBoardToString(solution)) {

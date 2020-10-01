@@ -1,3 +1,4 @@
+import { isEqual } from 'lodash'
 import { Board } from '../types'
 
 export function convertStringToBoard(boardStr: string): Board {
@@ -29,6 +30,19 @@ export function getBoxCoords(row: number, column: number): [number, number] {
 	const x = Math.floor(column / 3)
 	const y = Math.floor(row / 3)
 	return [x, y]
+}
+
+export const isBoxFull = (board: Board, row: number, column: number) => {
+	const activeBoxCoords = getBoxCoords(row, column)
+	for (const [rowNum, fullRow] of board.entries()) {
+		for (const [colNum, square] of fullRow.entries()) {
+			const boxCoords = getBoxCoords(rowNum, colNum)
+			if (isEqual(activeBoxCoords, boxCoords) && square === 0) {
+				return false
+			}
+		}
+	}
+	return true
 }
 
 export function createEmptyBoard(): Board {

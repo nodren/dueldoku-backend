@@ -26,11 +26,11 @@ export class SudokuGenerator {
 		}
 	}
 
-	public generatePuzzle(difficulty: number = 3): [Board, Board] {
+	public generatePuzzle(remainingPieces: number = 17, threshold: number = 5): [Board, Board] {
 		this.generateSolution(this.board)
 		this.solution = cloneDeep(this.board)
 		// this.printBoard('full solution')
-		this.removeNumbersFromBoard(difficulty)
+		this.removeNumbersFromBoard(remainingPieces, threshold)
 		// this.printBoard('with removed numbers')
 		return [this.board, this.solution]
 	}
@@ -155,11 +155,12 @@ export class SudokuGenerator {
 		return this.shuffle(nonEmptyTiles)
 	}
 
-	private removeNumbersFromBoard(difficulty: number) {
+	private removeNumbersFromBoard(remainingPieces: number, threshold: number) {
 		const nonEmptyTiles = this.getNonEmptyTiles(this.board)
 		let nonEmptyTilesCount = nonEmptyTiles.length
-		let rounds = difficulty
-		while (rounds > 0 && nonEmptyTilesCount >= 17) {
+		let rounds = 15
+		let lastCount = 0
+		while (rounds > 0 && nonEmptyTilesCount > remainingPieces) {
 			const [row, col] = nonEmptyTiles.pop()
 			nonEmptyTilesCount -= 1
 
@@ -175,9 +176,26 @@ export class SudokuGenerator {
 			if (this.counter !== 1) {
 				this.board[row][col] = removedSquare
 				nonEmptyTilesCount += 1
+				if (
+					nonEmptyTilesCount === lastCount &&
+					rounds > 1 &&
+					nonEmptyTilesCount - threshold <= remainingPieces
+				) {
+					rounds = 2
+				}
+				if (
+					nonEmptyTilesCount - 1 === lastCount &&
+					rounds > 2 &&
+					nonEmptyTilesCount - threshold <= remainingPieces
+				) {
+					rounds = 3
+				}
+				lastCount = nonEmptyTilesCount
 				rounds -= 1
+				// console.log('ROUND', rounds, nonEmptyTilesCount)
 			}
 		}
+		// console.log('FINAL', nonEmptyTilesCount)
 	}
 
 	private shuffle<T>(array: T[]): T[] {
